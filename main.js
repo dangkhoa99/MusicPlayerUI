@@ -291,7 +291,7 @@ const app = {
             audio.muted = false
             audio.volume = e.target.value / 100
             _this.currentVolume = audio.volume
-            valueVolumeProgress.textContent = e.target.value
+            valueVolumeProgress.textContent = Math.round(e.target.value)
             _this.changeStyleVolume()
             _this.setConfig('currentVolume', _this.currentVolume)
         }
@@ -524,7 +524,7 @@ const app = {
             volumeProgress.value = this.currentVolume * 100
             audio.volume = this.currentVolume
         }
-        valueVolumeProgress.textContent = this.currentVolume * 100
+        valueVolumeProgress.textContent = Math.round(this.currentVolume * 100)
         this.setConfig('volumeBeforeMuted', this.volumeBeforeMuted)
         this.setConfig('isMuted', this.isMuted)
         this.setConfig('currentVolume', this.currentVolume)
@@ -561,7 +561,7 @@ const app = {
         repeatBtn.classList.toggle('active', this.isRepeat)
         volumeProgress.value = (this.currentVolume * 100)
         audio.volume = this.currentVolume
-        valueVolumeProgress.textContent =  volumeProgress.value
+        valueVolumeProgress.textContent =  Math.round(volumeProgress.value)
 
         this.changeStyleVolume()
         this.changeTitle()
