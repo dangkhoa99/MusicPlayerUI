@@ -10,7 +10,6 @@ const cd = $('.cd')
 const cdThumb = $('.cd-thumb')
 const audio = $('#audio')
 const playBtn = $('.btn-toggle-play')
-const inputPlayBtn = $('.btn-toggle-play input')
 const progress =  $('#progress')
 const prevBtn = $('.btn-prev')
 const nextBtn = $('.btn-next')
@@ -234,7 +233,6 @@ const app = {
         audio.onplay = function() {
             _this.isPlaying = true
             player.classList.add('playing')
-            inputPlayBtn.checked = false
             cdThumbAnimate.play()
             $$(".music-waves.active span").forEach(span => {
                 span.classList.add('active')
@@ -251,7 +249,6 @@ const app = {
         audio.onpause = function() {
             _this.isPlaying = false
             player.classList.remove('playing')
-            inputPlayBtn.checked = true
             cdThumbAnimate.pause()
             $$(".music-waves.active span.active").forEach(span => {
                 span.classList.remove('active')
@@ -260,7 +257,7 @@ const app = {
 
         // Khi tiến độ bài hát thay đổi
         audio.ontimeupdate = function() {
-            if(audio.duration && !_this.isOnMouseAndTouchOnProgress) {
+            if (audio.duration && !_this.isOnMouseAndTouchOnProgress) {
                 const progressPercent = Math.floor(audio.currentTime / audio.duration * 100)
                 progress.value = progressPercent
                 _this.setConfig("currentTime", audio.currentTime)
@@ -282,9 +279,11 @@ const app = {
 
         // Xử lý khi tua nhạc
         progress.oninput = function(e) {
-            const seekTime = audio.duration / 100 * e.target.value
-            audio.currentTime = seekTime
-            _this.isOnMouseAndTouchOnProgress = false
+            if (audio.duration) {
+                const seekTime = audio.duration / 100 * e.target.value
+                audio.currentTime = seekTime
+                _this.isOnMouseAndTouchOnProgress = false
+            }
         }
 
         // Xử lý khi thay đổi âm lượng
