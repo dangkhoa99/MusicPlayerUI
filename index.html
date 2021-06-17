@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sound Music</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+        <link rel="icon" href="./assets/image/logo.ico" type="image/gif" sizes="48x48"> 
+        <link rel="stylesheet" href="./assets/css/style.css">
+    </head>
+    
+    <body>
+        <div class="player">
+            <div class="dashboard">
+                <header>
+                    <h4>Now Playing</h4>
+                    <h2>No Name</h2>
+                    <p>No Name</p>
+                </header>
+            
+                <div class="cd">
+                    <div class="cd-thumb" style="background-image: url('')">
+                    </div>
+                    <div class="cd-inner--1"></div>
+                    <div class="cd-inner--2"></div>
+                </div>
+
+                <div class="time">
+                    <p class="playing-time">00:00</p>
+                    <p class="duration-time">--:--</p>
+                </div>
+
+                <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
+            
+                <audio id="audio" src=""></audio>
+            
+                <div class="control">
+                    <div class="btn btn-random">
+                        <i class="fas fa-random"></i>
+                    </div>
+
+                    <div class="btn btn-prev" title="Previous">
+                        <i class="fas fa-step-backward"></i>
+                    </div>
+
+                    <div class="btn btn-toggle-play">
+                        <input type="checkbox" value="None" id="playpause" name="check" checked/>
+                        <label for="playpause" tabindex=1></label>
+                    </div>
+
+                    <div class="btn btn-next" title="Next">
+                        <i class="fas fa-step-forward"></i>
+                    </div>
+
+                    <div class="btn btn-repeat">
+                        <i class="fas fa-retweet"></i>
+                    </div>
+                </div>
+
+                <div class="volume">
+                    <div class="btn active btn-volume-mute" title="Unmute" style="display: none">
+                        <i class="fas fa-volume-mute"></i>
+                    </div>
+                    
+                    <div class="btn active btn-volume-down" title="Mute" style="display: none">
+                        <i class="fas fa-volume-down"></i>
+                    </div>
+
+                    <div class="btn active btn-volume-up" title="Mute">
+                        <i class="fas fa-volume-up"></i>
+                    </div>
+
+                    <input id="volume-progress" class="volume-progress" type="range" value="100" step="1" min="0" max="100">
+
+                    <span class="volume-value-text">Vol: </span>
+                    <span class="volume-value">--</span>
+                </div>
+            </div>
+
+            <div class="playlist">
+                <div class="playlist__heading">
+                    <h2>Playlist</h2>
+
+                    <div class="theme-switch-wrapper">
+                        <label class="theme-switch" for="checkbox">
+                          <input type="checkbox" id="checkbox" />
+                          <div class="slider round"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="playlist__list"></div>
+            </div>
+        </div>
+
+        <footer>
+            <a href="https://github.com/dangkhoa99" target="_blank" title="Khoa's Github Page">
+                <i class="fab fa-github"></i>
+                DangKhoa99
+            </a>
+            ·
+            <a href="https://github.com/dangkhoa99/dangkhoa99.github.io" target="_blank" title="Source Code">
+                <i class="fas fa-file-code"></i>
+                Sound Music
+            </a>
+        </footer>
+
+        <script src="./main.js"></script>
+    </body>
+</html>
