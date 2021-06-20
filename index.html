@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Sound Music</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
         <link rel="icon" href="./assets/image/logo.ico" type="image/gif" sizes="48x48"> 
@@ -27,15 +27,20 @@
                     <div class="cd-inner--2"></div>
                 </div>
 
-                <div class="time">
+                <div class="progress-time">
                     <p class="playing-time">00:00</p>
+
+                    <div class="duration-bar">
+                        <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
+                    
+                        <audio id="audio" src=""></audio>
+
+                        <canvas id="canvas"></canvas>
+                    </div>
+
                     <p class="duration-time">--:--</p>
                 </div>
 
-                <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
-            
-                <audio id="audio" src=""></audio>
-            
                 <div class="control">
                     <div class="btn btn-random">
                         <i class="fas fa-random"></i>
@@ -55,17 +60,21 @@
                     </div>
 
                     <div class="btn btn-repeat">
-                        <i class="fas fa-retweet"></i>
+                        <i class="fas fa-repeat"></i>
                     </div>
                 </div>
 
                 <div class="volume">
-                    <div class="btn active btn-volume-mute" title="Unmute" style="display: none">
-                        <i class="fas fa-volume-mute"></i>
+                    <div class="btn active btn-volume-slash" title="Unmute" style="display: none">
+                        <i class="fas fa-volume-slash"></i>
                     </div>
-                    
+
                     <div class="btn active btn-volume-down" title="Mute" style="display: none">
                         <i class="fas fa-volume-down"></i>
+                    </div>
+                    
+                    <div class="btn active btn-volume" title="Mute" style="display: none">
+                        <i class="fas fa-volume"></i>
                     </div>
 
                     <div class="btn active btn-volume-up" title="Mute">

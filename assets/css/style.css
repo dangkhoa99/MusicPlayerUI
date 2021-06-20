@@ -69,6 +69,10 @@ html {
     flex-direction: column;
     justify-content: center;
     width: 50%;
+
+    position: relative;
+    z-index:1;
+    overflow: hidden;
 }
 
 /* HEADER */
@@ -141,16 +145,36 @@ header p {
 }
 
 /* Music Progress */
-.time {
+.progress-time {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px;
+    margin-top: 50px;
 }
 
-.time p {
+.progress-time p {
     color: var(--gray-color);
     font-size: 14px;
+    text-shadow: 2px 2px 2px var(--white-color);
+    text-align: center;
+    width: 50px;
+}
+
+.duration-bar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+}
+
+#canvas {
+    left: 0;
+    right: 0;
+    position: absolute;
+    width: 100%;
+    margin-top: 10px;
+    z-index: -1;
 }
 
 .progress {
@@ -205,7 +229,7 @@ header p {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    padding: 30px 0 15px 0;
+    padding: 50px 0 15px 0;
 }
 
 .control .btn,
@@ -312,6 +336,11 @@ header p {
     color: var(--gray-color);
     font-size: 14px;
 }
+
+.volume-value {
+    width: 22px;
+}
+
 
 /* PLAYLIST */
 .playlist {
@@ -603,6 +632,10 @@ footer::before {
         border-radius: 50%;
     }
 
+    #canvas {
+        margin-top: 6px;
+    }
+
     .volume-progress::-moz-range-thumb {
         background: #fff;
         border: 1px solid #000;
@@ -716,6 +749,7 @@ footer::before {
         position: fixed;
         top: 0;
         z-index: 99;
+        padding: 10px;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
     }

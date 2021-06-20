@@ -6,27 +6,37 @@ const PLAYER_STORAGE_KEY = 'DANGKHOA'
 const player = $('.player')
 const songName = $('header h2')
 const singerName = $('header p')
+
 const cd = $('.cd')
 const cdThumb = $('.cd-thumb')
-const audio = $('#audio')
-const playBtn = $('.btn-toggle-play')
+
+const playingTime = $('.playing-time')
+const durationTime = $('.duration-time')
 const progress =  $('#progress')
+const audio = $('#audio')
+const canvas = $('#canvas')
+
+const playBtn = $('.btn-toggle-play')
 const prevBtn = $('.btn-prev')
 const nextBtn = $('.btn-next')
 const randomBtn = $('.btn-random')
 const repeatBtn = $('.btn-repeat')
-const playlist = $('.playlist .playlist__list')
-const playingTime = $('.playing-time')
-const durationTime = $('.duration-time')
+
 const volumeProgress = $('#volume-progress')
 const valueVolumeProgress = $('.volume-value')
-const muteBtn = $('.btn-volume-mute')
-const upVolumeBtn = $('.btn-volume-up')
+const slashVolumeBtn = $('.btn-volume-slash')
 const downVolumeBtn = $('.btn-volume-down')
+const volumeBtn = $('.btn-volume')
+const upVolumeBtn = $('.btn-volume-up')
+
+const playlist = $('.playlist .playlist__list')
 
 // Random lại 1 bài khi đã random hết playlist
 let arrayRandom = []
 let lenArrRandom = 0
+
+// Chạy một lần AudioContext
+let runOnlyOnce = false
 
 const app = {
     currentIndex: 0,
@@ -206,14 +216,12 @@ const app = {
 
         // Phát / dừng nhạc khi nhấn `space`
 		document.onkeydown = function(e) {
-			if(e.code === "Space") {
+			if (e.code === "Space") {
                 e.preventDefault()
 				if (_this.isPlaying) {
                     audio.pause()
-                    playBtn.title = "Play"
                 } else {  
                     audio.play()
-                    playBtn.title = "Pause"
                 }
 			}
 		}
@@ -222,10 +230,8 @@ const app = {
         playBtn.onclick = function() {
             if (_this.isPlaying) {
                 audio.pause()
-                playBtn.title = "Play"
             } else {  
                 audio.play()
-                playBtn.title = "Pause"
             }
         }
 
@@ -233,10 +239,15 @@ const app = {
         audio.onplay = function() {
             _this.isPlaying = true
             player.classList.add('playing')
+            playBtn.title = "Pause"
             cdThumbAnimate.play()
             $$(".music-waves.active span").forEach(span => {
                 span.classList.add('active')
             })
+            if (!runOnlyOnce) {
+                _this.renderEqualizer()
+                runOnlyOnce = true
+            }
         }
 
         // Khi auto được tải lên
@@ -249,6 +260,7 @@ const app = {
         audio.onpause = function() {
             _this.isPlaying = false
             player.classList.remove('playing')
+            playBtn.title = "Play"
             cdThumbAnimate.pause()
             $$(".music-waves.active span.active").forEach(span => {
                 span.classList.remove('active')
@@ -305,7 +317,11 @@ const app = {
             _this.muteOrUnmuteVolume()
         }
 
-        muteBtn.onclick = function() {
+        volumeBtn.onclick = function() {
+            _this.muteOrUnmuteVolume()
+        }
+
+        slashVolumeBtn.onclick = function() {
             _this.muteOrUnmuteVolume()
         }
 
@@ -375,6 +391,79 @@ const app = {
                 block: 'end',
             })
         }, 100)
+    },
+
+    renderEqualizer() {
+        const _this = this
+        var BAR_PAD = 10
+        var BAR_WIDTH = 5
+        var MAX_BARS = 80
+        
+        var audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+
+        // Create a MediaElementAudioSourceNode
+        // Feed the HTMLMediaElement into it
+        var source  = audioCtx.createMediaElementSource(audio)
+
+        var analyser = audioCtx.createAnalyser()
+        
+        // canvas.width = window.innerWidth * 0.8
+        // canvas.height = window.innerHeight * 0.4
+
+        canvas.width = 840
+        canvas.height = 300
+
+        var ctx = canvas.getContext("2d")
+
+        source.connect(analyser)
+        analyser.connect(audioCtx.destination)
+
+        var bufferLength = analyser.frequencyBinCount
+
+        var dataArray = new Uint8Array(bufferLength)
+        // console.log(bufferLength)
+
+        var WIDTH = canvas.width
+        var HEIGHT = canvas.height
+
+        function renderFrame() {
+            requestAnimationFrame(renderFrame)
+
+            analyser.getByteFrequencyData(dataArray)
+        
+            ctx.clearRect(0, 0, WIDTH, HEIGHT)
+
+            var len = dataArray.length - (Math.floor(dataArray.length / MAX_BARS) * 4)
+            var maxValue = 255
+            var step = Math.floor(len / MAX_BARS)
+            var quantityDot = (WIDTH / MAX_BARS) * 1.2
+            var x = BAR_WIDTH
+            var height = (HEIGHT - (BAR_PAD * 2))
+
+            for (var i = 0; i < len; i += step) {
+                var v = (dataArray[i] / maxValue)
+                var h = v * height
+                var y = height / 2 - h / 2
+                ctx.beginPath()
+                if(_this.config.theme === "dark") {
+                    ctx.shadowColor = "rgba(0, 0, 0, 0.5)"
+                    ctx.strokeStyle = "rgba(255, 255, 255, 0.9)"
+                } else {
+                    ctx.shadowColor = "rgba(255, 255, 255, 0.5)"
+                    ctx.strokeStyle = "rgba(0, 0, 0, 0.9)"
+                }
+                ctx.shadowBlur = 8
+                ctx.shadowOffsetX = 0
+                ctx.shadowOffsetY = 4
+                ctx.lineWidth = BAR_WIDTH
+                ctx.lineCap = 'round'
+                ctx.moveTo(x, y)
+                ctx.lineTo(x, y + h)
+                ctx.stroke()
+                x += quantityDot + 1
+            }
+        }
+        renderFrame()
     },
 
     loadCurrentSong() {
@@ -493,18 +582,27 @@ const app = {
 
     changeStyleVolume() {
         if (this.currentVolume === 0) {
-            muteBtn.style.display = 'flex'
+            slashVolumeBtn.style.display = 'flex'
             downVolumeBtn.style.display = 'none'
+            volumeBtn.style.display = 'none'
             upVolumeBtn.style.display = 'none'
         }
-        else if (this.currentVolume > 0 && this.currentVolume < 0.5) {
-            muteBtn.style.display = 'none'
+        else if (this.currentVolume > 0 && this.currentVolume <= 0.25) {
+            slashVolumeBtn.style.display = 'none'
             downVolumeBtn.style.display = 'flex'
+            volumeBtn.style.display = 'none'
+            upVolumeBtn.style.display = 'none'
+        }
+        else if (this.currentVolume > 0.25 && this.currentVolume <= 0.5) {
+            slashVolumeBtn.style.display = 'none'
+            downVolumeBtn.style.display = 'none'
+            volumeBtn.style.display = 'flex'
             upVolumeBtn.style.display = 'none'
         }
         else {
-            muteBtn.style.display = 'none'
+            slashVolumeBtn.style.display = 'none'
             downVolumeBtn.style.display = 'none'
+            volumeBtn.style.display = 'none'
             upVolumeBtn.style.display = 'flex'
         }
     },
